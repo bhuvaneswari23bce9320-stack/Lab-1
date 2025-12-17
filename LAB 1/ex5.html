@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Musnalli Bhuvaneswari | Engineering Portfolio</title>
+
+    <style>
+        :root {
+            /* Professional Light Pink & Indigo Theme */
+            --bg-main: #fff1f5;        /* Light Pink Background */
+            --bg-card: #ffffff;       /* White Cards */
+            --accent-primary: #6366f1;/* Indigo */
+            --accent-soft: #fbcfe8;   /* Soft Pink */
+            --text-dark: #1f2933;
+            --text-dim: #4b5563;
+        }
+
+        body {
+            font-family: 'Segoe UI', Inter, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(180deg, #fff1f5 0%, #fdf2f8 100%);
+            color: var(--text-dark);
+            line-height: 1.7;
+        }
+
+        header {
+            background: linear-gradient(135deg, #fbcfe8 0%, #e0e7ff 100%);
+            padding: 100px 20px;
+            text-align: center;
+            border-bottom: 3px solid var(--accent-primary);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 3rem;
+            color: var(--accent-primary);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #6b21a8;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 12px;
+        }
+
+        section {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 0 25px;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--accent-primary);
+        }
+
+        h2::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: var(--accent-soft);
+        }
+
+        #about p {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            list-style: none;
+            padding: 0;
+            gap: 12px;
+        }
+
+        .skills-list li {
+            background: #fdf2f8;
+            border: 1px solid #fbcfe8;
+            padding: 8px 22px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--accent-primary);
+            transition: 0.3s;
+        }
+
+        .skills-list li:hover {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .project-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .project-card {
+            background: var(--bg-card);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid #fbcfe8;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            transition: 0.4s;
+        }
+
+        .project-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(99,102,241,0.25);
+        }
+
+        .project-card h3 {
+            margin-top: 0;
+            color: var(--accent-primary);
+        }
+
+        .project-card p {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+        }
+
+        footer {
+            background: #fdf2f8;
+            padding: 60px 20px;
+            text-align: center;
+            margin-top: 100px;
+            border-top: 2px solid #fbcfe8;
+        }
+
+        footer a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .contact-info {
+            margin-top: 10px;
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        .copy {
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Musnalli Bhuvaneswari</h1>
+    <p>Engineering Student</p>
+</header>
+
+<section id="about">
+    <h2>About Me</h2>
+    <p>
+        I am an engineering student with a strong interest in software development and modern technologies.
+        I focus on building clean, understandable projects while strengthening my fundamentals.
+        I am motivated to learn continuously and apply my knowledge to real-world engineering problems.
+    </p>
+</section>
+
+<section id="skills">
+    <h2>Core Skills</h2>
+    <ul class="skills-list">
+        <li>Java</li>
+        <li>Python</li>
+        <li>HTML & CSS</li>
+        <li>SQL</li>
+        <li>Git & GitHub</li>
+        <li>Basics of AI & ML</li>
+        <li>Problem Solving</li>
+    </ul>
+</section>
+
+<section id="projects">
+    <h2>Projects</h2>
+    <div class="project-container">
+        <div class="project-card">
+            <h3>01. Smart Crop Protection System</h3>
+            <p>
+                A technology-driven agriculture project aimed at protecting crops by monitoring conditions
+                and reducing losses caused by pests and environmental changes.
+            </p>
+        </div>
+
+        <div class="project-card">
+            <h3>02. Email Generator Using Generative AI</h3>
+            <p>
+                An application that creates professional and structured emails automatically using
+                generative AI concepts, improving efficiency and communication quality.
+            </p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>Contact Me</p>
+    <p>
+        <a href="mailto:bhuvaneswarimusanlli@gmail.com">
+            bhuvaneswarimusanlli@gmail.com
+        </a>
+    </p>
+    <div class="contact-info">
+        📞 9390718352
+    </div>
+    <p class="copy">&copy; 2025 Musnalli Bhuvaneswari. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
