@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Task Board</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --column-bg: rgba(255, 255, 255, 0.05);
+            --card-bg: #ffffff;
+            --text-main: #f8fafc;
+            --accent: #3b82f6;
+            --success: #22c55e;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* PROFESSIONAL BACKGROUND */
+            background-color: var(--bg);
+            background-image:
+                radial-gradient(at 0% 0%, hsla(217,100%,50%,0.15) 0, transparent 50%),
+                radial-gradient(at 100% 100%, hsla(217,100%,50%,0.1) 0, transparent 50%);
+            margin: 0;
+            padding: 40px;
+            color: var(--text-main);
+            min-height: 100vh;
+        }
+
+        .header { text-align: center; margin-bottom: 40px; }
+       
+        /* Input Section */
+        .controls {
+            display: flex; justify-content: center; gap: 10px; margin-bottom: 50px;
+        }
+        input {
+            padding: 12px 20px; border-radius: 8px; border: none; width: 300px; font-size: 14px;
+        }
+        button {
+            background: var(--accent); color: white; border: none; padding: 12px 25px;
+            border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s;
+        }
+        button:hover { background: #2563eb; transform: translateY(-2px); }
+
+        /* Kanban Layout */
+        .board {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; max-width: 1200px; margin: auto;
+        }
+        .column {
+            background: var(--column-bg); backdrop-filter: blur(10px);
+            border-radius: 16px; padding: 20px; min-height: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .column h2 { text-align: center; font-size: 1.2rem; margin-top: 0; color: #94a3b8; }
+
+        /* Task Card Styling */
+        .task-card {
+            background: var(--card-bg); color: #1e293b; padding: 15px; border-radius: 12px;
+            margin-bottom: 15px; cursor: grab; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s, background 0.3s;
+        }
+        .task-card:active { cursor: grabbing; }
+        .task-card h3 { margin: 0 0 5px 0; font-size: 16px; }
+        .task-card small { color: #64748b; font-size: 12px; }
+        .success-msg { color: var(--success); font-weight: bold; font-size: 11px; margin-top: 8px; display: none; }
+
+        /* Requirement: Completed Column Background */
+        .completed-task { background: #dcfce7 !important; border: 1px solid #22c55e; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Task Management Board</h1>
+        <p>Drag and drop tasks to organize your workflow</p>
+    </div>
+
+    <div class="controls">
+        <input type="text" id="taskInput" placeholder="Enter task name...">
+        <button onclick="addTask()">Add Task</button>
+    </div>
+
+    <div class="board">
+        <div class="column" id="todo" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>To Do</h2>
+            <div class="list" id="todoList"></div>
+        </div>
+
+        <div class="column" id="inprogress" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>In Progress</h2>
+            <div class="list" id="inprogressList"></div>
+        </div>
+
+        <div class="column" id="completed" ondrop="drop(event)" ondragover="allowDrop(event)">
+            <h2>Completed</h2>
+            <div class="list" id="completedList"></div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Requirement: Add Task Logic
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            const taskName = input.value.trim();
+
+            if (taskName === "") {
+                alert("Please enter a task name");
+                return;
+            }
+
+            const taskId = 'task-' + Date.now();
+            const currentDate = new Date().toLocaleDateString();
+
+            // Create Task Card element
+            const card = document.createElement('div');
+            card.className = 'task-card';
+            card.id = taskId;
+            card.draggable = true; // Requirement: Draggable
+            card.ondragstart = drag;
+
+            card.innerHTML = `
+                <h3>${taskName}</h3>
+                <small>Created: ${currentDate}</small>
+                <div class="success-msg">Task Completed Successfully</div>
+            `;
+
+            document.getElementById('todoList').appendChild(card);
+            input.value = "";
+        }
+
+        // 2. Drag and Drop API functions
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const draggedElement = document.getElementById(data);
+           
+            // Find the closest column/list to drop into
+            let target = ev.target;
+            while (target && !target.classList.contains('column')) {
+                target = target.parentElement;
+            }
+
+            if (target) {
+                const list = target.querySelector('.list');
+                list.appendChild(draggedElement);
+
+                // 3. Requirement: Specific Logic for "Completed" column
+                const successMsg = draggedElement.querySelector('.success-msg');
+               
+                if (target.id === 'completed') {
+                    draggedElement.classList.add('completed-task');
+                    successMsg.style.display = 'block';
+                } else {
+                    draggedElement.classList.remove('completed-task');
+                    successMsg.style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management System</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #dbeafe;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --error: #ef4444;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.5;
+        }
+
+        /* Header Section */
+        .header { text-align: center; margin-bottom: 40px; }
+        .db-icon {
+            background: var(--primary-light);
+            width: 50px; height: 50px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 12px; margin: 0 auto 15px;
+        }
+
+        /* Layout Grid */
+        .container {
+            max-width: 1100px; margin: auto;
+            display: grid; grid-template-columns: 380px 1fr; gap: 30px;
+        }
+
+        /* Card Styling */
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px; padding: 25px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            display: flex; align-items: center; gap: 12px;
+            font-size: 1.25rem; font-weight: 700; margin-bottom: 25px;
+        }
+
+        .icon-circle {
+            background: #eff6ff; color: var(--primary);
+            padding: 8px; border-radius: 8px; display: flex;
+        }
+
+        /* Form Elements */
+        .form-group { margin-bottom: 18px; position: relative; }
+        label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+        label span { color: var(--error); }
+       
+        input {
+            width: 100%; padding: 12px; border: 1px solid var(--border);
+            border-radius: 8px; font-size: 14px; box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        input:focus { outline: none; border-color: var(--primary); }
+
+        .btn-submit {
+            width: 100%; background: var(--primary); color: white;
+            border: none; padding: 14px; border-radius: 10px;
+            font-weight: 600; cursor: pointer; display: flex;
+            align-items: center; justify-content: center; gap: 8px;
+        }
+
+        /* Table & Empty State */
+        .empty-view {
+            text-align: center; padding: 60px 20px; color: var(--text-muted);
+        }
+        .empty-view svg { margin-bottom: 15px; opacity: 0.3; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; font-size: 12px; text-transform: uppercase; color: var(--text-muted); padding: 12px; border-bottom: 1px solid var(--border); }
+        td { padding: 14px 12px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+
+        .delete-link { color: var(--error); cursor: pointer; font-weight: 600; background: none; border: none; }
+        .btn-clear { background: none; border: 1px solid var(--border); padding: 8px 16px; border-radius: 8px; cursor: pointer; margin-top: 20px; }
+
+        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="db-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #2563eb;"><path d="M3 6s0 3 9 3 9-3 9-3-9-3-9-3-9 3-9 3Z"/><path d="M3 6v12s0 3 9 3 9-3 9-3V6"/><path d="M3 12c0 3 9 3 9 3s9-3 9-3"/></svg>
+        </div>
+        <h1 style="margin:0">User Management System</h1>
+        <p style="color: var(--text-muted)">Register and manage users with localStorage persistence.</p>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-circle">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="16" y1="11" x2="22" y2="11"/></svg>
+                </div>
+                Register New User
+            </div>
+            <form id="regForm">
+                <div class="form-group">
+                    <label>Name <span>*</span></label>
+                    <input type="text" id="uName" placeholder="Enter your full name" required>
+                </div>
+                <div class="form-group">
+                    <label>Email <span>*</span></label>
+                    <input type="email" id="uEmail" placeholder="Enter your email address" required>
+                </div>
+                <div class="form-group">
+                    <label>Mobile Number <span>*</span></label>
+                    <input type="text" id="uMobile" placeholder="Enter 10-digit mobile number" required>
+                </div>
+                <div class="form-group">
+                    <label>Password <span>*</span></label>
+                    <input type="password" id="uPass" placeholder="Enter password (min 6 chars)" required>
+                </div>
+                <button type="submit" class="btn-submit">Register User</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <div class="icon-circle">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div>
+                    Registered Users
+                    <div id="counter" style="font-size: 12px; font-weight: normal; color: var(--text-muted);">0 user(s) registered</div>
+                </div>
+            </div>
+
+            <div id="displayArea"></div>
+            <button id="clearAllBtn" class="btn-clear" onclick="clearData()" style="display:none;">Clear All Users</button>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('regForm');
+        const displayArea = document.getElementById('displayArea');
+        const counter = document.getElementById('counter');
+        const clearBtn = document.getElementById('clearAllBtn');
+
+        // Render on load
+        window.onload = loadUsers;
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const user = {
+                name: document.getElementById('uName').value,
+                email: document.getElementById('uEmail').value,
+                mobile: document.getElementById('uMobile').value,
+                pass: document.getElementById('uPass').value
+            };
+
+            // Requirement: Validations
+            if (user.mobile.length !== 10 || isNaN(user.mobile)) {
+                alert("Mobile Number must be exactly 10 digits.");
+                return;
+            }
+            if (user.pass.length < 6) {
+                alert("Password must be at least 6 characters.");
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem('usersList')) || [];
+
+            // Requirement: No duplicate emails
+            if (users.find(u => u.email === user.email)) {
+                alert("This email is already registered.");
+                return;
+            }
+
+            users.push(user);
+            localStorage.setItem('usersList', JSON.stringify(users));
+            form.reset();
+            loadUsers();
+        });
+
+        function loadUsers() {
+            const users = JSON.parse(localStorage.getItem('usersList')) || [];
+            counter.innerText = `${users.length} user(s) registered`;
+
+            if (users.length === 0) {
+                clearBtn.style.display = "none";
+                displayArea.innerHTML = `
+                    <div class="empty-view">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        <h3 style="color:var(--text-main); margin-bottom:5px;">No users registered yet</h3>
+                        <p>Use the form on the left to add users</p>
+                    </div>`;
+            } else {
+                clearBtn.style.display = "block";
+                let tableHtml = `<table><thead><tr><th>Name</th><th>Email</th><th>Mobile</th><th>Action</th></tr></thead><tbody>`;
+               
+                users.forEach((u, index) => {
+                    tableHtml += `
+                        <tr>
+                            <td><strong>${u.name}</strong></td>
+                            <td>${u.email}</td>
+                            <td>${u.mobile}</td>
+                            <td><button class="delete-link" onclick="deleteUser(${index})">Delete</button></td>
+                        </tr>`;
+                });
+                tableHtml += `</tbody></table>`;
+                displayArea.innerHTML = tableHtml;
+            }
+        }
+
+        function deleteUser(index) {
+            let users = JSON.parse(localStorage.getItem('usersList'));
+            users.splice(index, 1);
+            localStorage.setItem('usersList', JSON.stringify(users));
+            loadUsers();
+        }
+
+        function clearData() {
+            if (confirm("Delete all registered users?")) {
+                localStorage.removeItem('usersList');
+                loadUsers();
+            }
+        }
+    </script>
+</body>
+</html>
