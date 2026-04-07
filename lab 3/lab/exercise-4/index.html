@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity Monitor - Event Tracking</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="title-section">
+                <div class="logo">⚡</div>
+                <div>
+                    <h1>Activity Monitor</h1>
+                    <p>Real-time user event tracking</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="resetBtn" class="btn-reset">↺ Reset</button>
+                <button id="exportBtn" class="btn-export">📥 Export</button>
+            </div>
+        </header>
+
+        <div id="warningBanner" class="warning-banner hidden">
+            <p>⚠️ <strong>Suspicious Activity Detected</strong></p>
+            <p id="warningDetail">High click rate: 0 clicks in 10s</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="card blue">
+                <div class="card-header">
+                    <span class="icon">🖱️</span>
+                    <span id="clickCount" class="count">0</span>
+                </div>
+                <p>Clicks (threshold: 15/10s)</p>
+            </div>
+            <div class="card green">
+                <div class="card-header">
+                    <span class="icon">⌨️</span>
+                    <span id="keyCount" class="count">0</span>
+                </div>
+                <p>Keypresses (threshold: 50/10s)</p>
+            </div>
+            <div class="card purple">
+                <div class="card-header">
+                    <span class="icon">🔍</span>
+                    <span id="focusCount" class="count">0</span>
+                </div>
+                <p>Focus Changes (threshold: 20/10s)</p>
+            </div>
+        </div>
+
+        <main class="main-content">
+            <aside class="side-panel">
+                <div class="demo-area">
+                    <h3>INTERACTIVE DEMO AREA</h3>
+                    <p class="subtext">Interact with these elements to see events tracked in real-time</p>
+                    
+                    <div class="button-row">
+                        <button class="demo-btn">Click Me</button>
+                        <button class="demo-btn">Or Me</button>
+                    </div>
+
+                    <input type="text" placeholder="Type something here..." class="demo-input">
+
+                    <div class="focus-grid">
+                        <button class="focus-btn">Focus #1</button>
+                        <button class="focus-btn">Focus #2</button>
+                        <button class="focus-btn">Focus #3</button>
+                    </div>
+                </div>
+
+                <div class="legend">
+                    <h3>EVENT PHASES</h3>
+                    <p><span class="label-capture">Capture:</span> Event travels down from window to target</p>
+                    <p><span class="label-bubble">Bubble:</span> Event travels up from target to window</p>
+                </div>
+            </aside>
+
+            <section class="log-section">
+                <div class="log-header">
+                    <h3>Activity Log</h3>
+                    <span id="eventTotal">0 events</span>
+                </div>
+                <div id="activityLog" class="log-container">
+                    </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

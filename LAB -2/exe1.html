@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exercise 1: HTML5 Canvas Lab</title>
+    <style>
+        /* Centers the canvas on the page */
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 50px;
+            font-family: Arial, sans-serif;
+        }
+        canvas {
+            border: 2px solid black; /* Makes the canvas edges visible */
+        }
+    </style>
+</head>
+<body>
+
+    <h2>HTML5 Canvas Exercise</h2>
+
+    <canvas id="labCanvas" width="500" height="300"></canvas>
+
+    <script>
+        // Set up the canvas context
+        const canvas = document.getElementById('labCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // 1. REQUIREMENT: Display a filled rectangle
+        ctx.fillStyle = "blue";
+        ctx.fillRect(50, 50, 150, 80); // x, y, width, height
+
+        // 2. REQUIREMENT: Display a filled circle
+        ctx.beginPath();
+        ctx.arc(400, 90, 45, 0, Math.PI * 2); // x, y, radius
+        ctx.fillStyle = "red";
+        ctx.fill();
+
+        // 3. REQUIREMENT: Display a straight line
+        ctx.beginPath();
+        ctx.moveTo(50, 260);  // Starting point (x, y)
+        ctx.lineTo(450, 260); // Ending point (x, y)
+        ctx.strokeStyle = "green";
+        ctx.lineWidth = 5;
+        ctx.stroke();
+
+        // 4. REQUIREMENT: Display text “HTML5 Canvas”
+        ctx.font = "30px Arial";
+        ctx.fillStyle = "black";
+        // Draw the text at (x, y) coordinates
+        ctx.fillText("HTML5 Canvas", 150, 200);
+    </script>
+
+</body>
+</html>

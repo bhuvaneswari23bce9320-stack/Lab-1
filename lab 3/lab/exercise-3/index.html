@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SurveyPro - Dynamic Survey Builder</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="navbar">
+        <div class="nav-left">
+            <div class="logo-box">
+                <i class="fas fa-list-alt"></i> SurveyPro
+            </div>
+            <nav>
+                <a href="#" class="active-nav">Survey Builder</a>
+            </nav>
+        </div>
+        <div class="nav-right">
+            Dynamic Forms with Real-Time Validation
+        </div>
+    </header>
+
+    <main class="survey-wrapper">
+        <div class="card header-card">
+            <div class="header-content">
+                <div class="icon-circle">
+                    <i class="fas fa-poll-h"></i>
+                </div>
+                <div class="text-group">
+                    <h2>Customer Satisfaction Survey</h2>
+                    <p>Help us improve by sharing your experience. Your feedback is valuable to us.</p>
+                </div>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="qCount">0 questions (0 required)</span>
+                    <span id="percentText" class="orange-text">0% complete</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progressBarFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <form id="surveyForm">
+            <div id="dynamicFields"></div>
+            
+            <div class="form-bottom">
+                <span class="required-hint">* Required fields</span>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i> Submit Survey
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
