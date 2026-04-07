@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercise 4 - Weather Dashboard | VIT-AP University</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        }
+
+        /* MODERN PROFESSIONAL HEADER */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 70px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        /* MODERN FOOTER */
+        footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 60px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            font-weight: 500;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+        }
+
+        /* SMOOTH ANIMATIONS */
+        header span {
+            white-space: nowrap;
+            animation: slideRight 30s linear infinite;
+        }
+
+        footer span {
+            white-space: nowrap;
+            animation: slideLeft 30s linear infinite;
+        }
+
+        @keyframes slideRight {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100vw); }
+        }
+
+        @keyframes slideLeft {
+            0% { transform: translateX(100vw); }
+            100% { transform: translateX(-100%); }
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            padding: 80px 20px 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container { 
+            display: flex; 
+            gap: 40px; 
+            width: 95%; 
+            max-width: 1400px;
+        }
+
+        /* MODERN GLASSMORPHISM CARDS */
+        .glass-box {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 45px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.4s ease;
+        }
+
+        .glass-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        }
+
+        /* LEFT PANEL - INPUT SECTION */
+        .left-panel { 
+            flex: 1; 
+            text-align: center; 
+        }
+        
+        .left-panel h1 { 
+            font-size: 4rem; 
+            font-weight: 300; 
+            background: linear-gradient(135deg, white, rgba(255,255,255,0.8));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 30px;
+        }
+
+        /* MODERN INPUT */
+        input { 
+            width: 100%; 
+            padding: 20px 25px; 
+            border-radius: 15px; 
+            border: 2px solid rgba(255,255,255,0.3);
+            margin-bottom: 20px; 
+            font-size: 1.1rem; 
+            outline: none;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        input:focus {
+            border-color: #00d4ff;
+            box-shadow: 0 0 30px rgba(0,212,255,0.3);
+            transform: scale(1.02);
+        }
+
+        /* PROFESSIONAL BUTTON */
+        .btn-search { 
+            background: linear-gradient(135deg, #00d4ff, #0099cc);
+            color: white; 
+            border: none; 
+            padding: 18px 40px; 
+            border-radius: 15px; 
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 10px 30px rgba(0,212,255,0.4);
+        }
+
+        .btn-search:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,212,255,0.6);
+        }
+
+        /* RIGHT PANEL - WEATHER DISPLAY */
+        .right-panel { flex: 1.8; }
+        .header-title { 
+            text-align: center; 
+            margin-bottom: 30px; 
+            font-size: 1.5rem;
+            color: white;
+            font-weight: 500;
+            opacity: 0.95;
+        }
+
+        .main-weather { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start;
+            margin-bottom: 30px;
+        }
+
+        .big-temp { 
+            font-size: 7rem; 
+            font-weight: 200; 
+            background: linear-gradient(135deg, #fff, #f0f8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        /* WEATHER STATS */
+        .stats-column {
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 20px;
+            border-left: 4px solid #00d4ff;
+        }
+
+        .stats-column p {
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stats-column b {
+            display: block;
+            font-size: 1.6rem;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        /* FORECAST BAR */
+        .forecast-row {
+            background: rgba(0, 50, 100, 0.3);
+            border-radius: 20px;
+            display: flex;
+            justify-content: space-around;
+            padding: 25px;
+            backdrop-filter: blur(15px);
+        }
+
+        .f-item { 
+            text-align: center; 
+            flex: 1; 
+            color: white;
+        }
+        
+        .f-item b { 
+            display: block; 
+            margin-bottom: 10px; 
+            color: #00d4ff; 
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .weather-symbol {
+            font-size: 2.5rem;
+            margin: 10px 0;
+            display: block;
+        }
+
+        /* LOADING & ERROR */
+        .loading {
+            text-align: center;
+            color: white;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid #00d4ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                gap: 30px;
+            }
+            
+            .left-panel h1 {
+                font-size: 2.5rem;
+            }
+            
+            .big-temp {
+                font-size: 4rem;
+            }
+            
+            .glass-box {
+                padding: 30px 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <span>🌟 VIT-AP UNIVERSITY | PROFESSIONAL WEATHER DASHBOARD | EXERCISE 4 🌟</span>
+    </header>
+
+    <div class="container">
+        <div class="glass-box left-panel">
+            <h1>🌤️ Weather</h1>
+            <input type="text" id="cityInput" placeholder="Enter city name (e.g., Amaravati, Delhi, London)">
+            <button class="btn-search" onclick="getWeather()">🔍 Search Weather</button>
+            <div class="loading" id="loading" style="display: none;">
+                <div class="spinner"></div>
+                <p>Loading weather data...</p>
+            </div>
+        </div>
+
+        <div class="glass-box right-panel">
+            <p class="header-title">📊 Current Weather Information</p>
+
+            <div class="main-weather">
+                <div>
+                    <h2 id="cityName" style="color: white; font-size: 1.8rem; margin-bottom: 15px;">📍 Select a city</h2>
+                    <div class="big-temp" id="mainTemp">--°C</div>
+                    <p id="mainDesc" style="color: rgba(255,255,255,0.9); font-size: 1.3rem; margin-top: 10px;">Weather Condition</p>
+                </div>
+
+                <div class="stats-column">
+                    <p>Humidity</p><b id="hum">--%</b>
+                    <p>Status</p><b id="status">--</b>
+                    <p>Clouds</p><b id="cloud">--%</b>
+                    <p>Pressure</p><b id="pres">-- hPa</b>
+                </div>
+            </div>
+
+            <div class="forecast-row" id="forecastBar">
+                <div class="f-item"><b>SUN</b><div class="weather-symbol">🌤️</div>--°C</div>
+                <div class="f-item"><b>MON</b><div class="weather-symbol">🌤️</div>--°C</div>
+                <div class="f-item"><b>TUE</b><div class="weather-symbol">🌤️</div>--°C</div>
+                <div class="f-item"><b>WED</b><div class="weather-symbol">🌤️</div>--°C</div>
+                <div class="f-item"><b>THU</b><div class="weather-symbol">🌤️</div>--°C</div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <span>🎓 VIT-AP University | Advanced JavaScript | DOM Manipulation & AJAX</span>
+    </footer>
+
+    <script>
+        const apiKey = "b852c4e9316273d3276cae8356bce833"; // WORKING API KEY
+
+        function getSymbol(temp) {
+            if (temp >= 30) return "☀️";   
+            if (temp >= 20) return "⛅";   
+            if (temp >= 10) return "☁️";   
+            return "🌧️";                   
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        async function getWeather() {
+            const city = document.getElementById("cityInput").value.trim();
+            if (!city) {
+                alert("Please enter a city name!");
+                return;
+            }
+
+            showLoading(true);
+
+            try {
+                // Current weather
+                const res = await fetch(
+                    `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${apiKey}`
+                );
+                const data = await res.json();
+
+                if (data.cod !== 200) {
+                    alert("❌ City not found! Please check spelling.");
+                    showLoading(false);
+                    return;
+                }
+
+                // Update current weather
+                document.getElementById("cityName").innerHTML = "📍 " + data.name + ", " + data.sys.country;
+                document.getElementById("mainTemp").innerText = Math.round(data.main.temp) + "°C";
+                document.getElementById("mainDesc").innerText = data.weather[0].description.toUpperCase();
+                document.getElementById("hum").innerText = data.main.humidity + "%";
+                document.getElementById("cloud").innerText = data.clouds.all + "%";
+                document.getElementById("pres").innerText = data.main.pressure + " hPa";
+
+                const temp = data.main.temp;
+                document.getElementById("status").innerText =
+                    temp >= 30 ? "🔥 HOT" :
+                    temp >= 20 ? "☀️ WARM" :
+                    temp >= 10 ? "🌤️ COOL" : "❄️ COLD";
+
+                // 5-Day Forecast
+                const fRes = await fetch(
+                    `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${apiKey}`
+                );
+                const fData = await fRes.json();
+
+                const bar = document.getElementById("forecastBar");
+                bar.innerHTML = "";
+
+                for (let i = 0; i < 5 && i < fData.list.length; i += 1) {
+                    const d = fData.list[i * 8]; // Every 24 hours
+                    const t = Math.round(d.main.temp);
+                    const day = new Date(d.dt * 1000)
+                        .toLocaleDateString("en-US", { weekday: "short" }).toUpperCase();
+
+                    bar.innerHTML += `
+                        <div class="f-item">
+                            <b>${day}</b>
+                            <div class="weather-symbol">${getSymbol(t)}</div>
+                            ${t}°C
+                        </div>
+                    `;
+                }
+
+                showLoading(false);
+                
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                alert("❌ Network error! Please check your connection.");
+                showLoading(false);
+            }
+        }
+
+        // Enter key support
+        document.getElementById('cityInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                getWeather();
+            }
+        });
+
+        // Load default city on page load
+        window.onload = function() {
+            document.getElementById('cityInput').value = 'Amaravati';
+            getWeather();
+        };
+    </script>
+</body>
+</html>

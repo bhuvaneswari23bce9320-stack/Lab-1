@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Details</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+        }
+        h2 {
+            border-bottom: 2px solid black;
+            padding-bottom: 5px;
+        }
+        .box {
+            border: 1px solid gray;
+            padding: 20px;
+            margin-top: 20px;
+            width: 500px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Student Details</h2>
+
+<div class="box" id="output"></div>
+
+<script>
+const student = {
+    id: 378,
+    name: "Bhuvaneswari",
+    department: "CSE",
+    marks: 98
+};
+
+const { id, name, department, marks } = student;
+
+const updatedStudent = {
+    ...student,
+    grade: "A+"
+};
+
+document.getElementById("output").innerHTML = `
+${id} ${name} ${department} ${marks} <br><br>
+${JSON.stringify(updatedStudent, null, 2)}
+`;
+</script>
+
+</body>
+</html>

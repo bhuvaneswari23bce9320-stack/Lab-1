@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Username Availability Checker</title>
+    <style>
+        /* [Same CSS as before - keeping it identical for professional look] */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        .container { background: white; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.1); padding: 40px; max-width: 450px; width: 100%; }
+        h1 { text-align: center; color: #1e3c72; margin-bottom: 10px; font-size: 28px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; font-size: 16px; }
+        .form-group { position: relative; margin-bottom: 25px; }
+        label { display: block; margin-bottom: 8px; color: #333; font-weight: 600; }
+        input[type="text"] { width: 100%; padding: 15px 20px 15px 20px; border: 2px solid #ddd; border-radius: 10px; font-size: 16px; transition: border-color 0.3s, box-shadow 0.3s; }
+        input[type="text"]:focus { outline: none; border-color: #1e3c72; box-shadow: 0 0 0 3px rgba(30,60,114,0.1); }
+        .loading-spinner { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; border: 2px solid #f3f3f3; border-top: 2px solid #1e3c72; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
+        @keyframes spin { 0% { transform: translateY(-50%) rotate(0deg); } 100% { transform: translateY(-50%) rotate(360deg); } }
+        .feedback { padding: 12px 15px; margin-top: 8px; border-radius: 8px; font-weight: 500; font-size: 14px; opacity: 0; transform: translateY(5px); transition: all 0.3s ease; }
+        .feedback.show { opacity: 1; transform: translateY(0); }
+        .feedback.available { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .feedback.taken { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .feedback.loading { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button { width: 100%; padding: 15px; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(30,60,114,0.3); }
+        button:disabled { background: #ccc; cursor: not-allowed; transform: none; box-shadow: none; }
+        .success-message { text-align: center; color: #28a745; font-weight: 600; margin-top: 20px; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registration Form</h1>
+        <p class="subtitle">Check username availability instantly</p>
+       
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter username (3-20 characters)" minlength="3" maxlength="20" required>
+                <div class="loading-spinner" id="loadingSpinner"></div>
+                <div id="feedback" class="feedback"></div>
+            </div>
+            <button type="submit" id="submitBtn">Create Account</button>
+        </form>
+        <div id="successMessage" class="success-message">✅ Account created successfully!</div>
+    </div>
+
+    <script>
+        // ✅ SIMULATED SERVER DATA - NO JSON FILE NEEDED
+        const SERVER_DATA = {
+            usernames: ["john", "jane", "admin", "user", "test", "demo", "alice", "bob", "charlie", "developer", "support"]
+        };
+
+        class UsernameAvailabilityChecker {
+            constructor() {
+                this.form = document.getElementById('registrationForm');
+                this.usernameInput = document.getElementById('username');
+                this.feedback = document.getElementById('feedback');
+                this.loadingSpinner = document.getElementById('loadingSpinner');
+                this.submitBtn = document.getElementById('submitBtn');
+                this.successMessage = document.getElementById('successMessage');
+               
+                this.isChecking = false;
+                this.isAvailable = false;
+                this.timeoutId = null;
+                this.serverData = SERVER_DATA;
+
+                this.init();
+            }
+
+            init() {
+                this.usernameInput.addEventListener('input', this.handleInput.bind(this));
+                this.form.addEventListener('submit', this.handleSubmit.bind(this));
+            }
+
+            handleInput() {
+                const username = this.usernameInput.value.trim();
+               
+                if (this.timeoutId) clearTimeout(this.timeoutId);
+
+                if (username.length < 3) {
+                    this.clearFeedback();
+                    return;
+                }
+
+                this.timeoutId = setTimeout(() => {
+                    this.checkAvailability(username);
+                }, 500);
+            }
+
+            async checkAvailability(username) {
+                if (this.isChecking) return;
+
+                this.isChecking = true;
+                this.showLoading();
+
+                try {
+                    // ✅ SIMULATE AJAX DELAY (like real server)
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
+                    const isTaken = this.serverData.usernames.includes(username.toLowerCase());
+                    this.isAvailable = !isTaken;
+
+                    this.showFeedback(
+                        isTaken ? 'Username already taken' : 'Username available',
+                        isTaken ? 'taken' : 'available'
+                    );
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    this.showFeedback('Error checking availability', 'loading');
+                } finally {
+                    this.hideLoading();
+                    this.isChecking = false;
+                }
+            }
+
+            showLoading() {
+                this.loadingSpinner.style.display = 'block';
+                this.submitBtn.disabled = true;
+                this.showFeedback('Checking availability...', 'loading');
+            }
+
+            hideLoading() {
+                this.loadingSpinner.style.display = 'none';
+                this.submitBtn.disabled = !this.isAvailable;
+            }
+
+            showFeedback(message, type) {
+                this.feedback.textContent = message;
+                this.feedback.className = `feedback ${type} show`;
+            }
+
+            clearFeedback() {
+                this.feedback.className = 'feedback';
+                this.feedback.textContent = '';
+                this.loadingSpinner.style.display = 'none';
+                this.submitBtn.disabled = true;
+            }
+
+            handleSubmit(e) {
+                e.preventDefault();
+                if (!this.isAvailable) {
+                    this.showFeedback('Please choose an available username', 'taken');
+                    return;
+                }
+                this.successMessage.style.display = 'block';
+                this.form.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new UsernameAvailabilityChecker();
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System | XML AJAX</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 20px; background-color: #f4f7f6; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h2 { color: #333; text-align: center; }
+        
+        /* Form Styling */
+        .form-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1-fr)); gap: 10px; margin-bottom: 20px; background: #eee; padding: 15px; border-radius: 5px; }
+        input, select, button { padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        button { cursor: pointer; border: none; transition: 0.3s; }
+        .btn-add { background-color: #28a745; color: white; }
+        .btn-add:hover { background-color: #218838; }
+        
+        /* Table Styling */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #007bff; color: white; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        
+        /* Action Buttons */
+        .btn-edit { background-color: #ffc107; color: #333; margin-right: 5px; }
+        .btn-delete { background-color: #dc3545; color: white; }
+        
+        /* Messages */
+        #message { padding: 10px; margin-bottom: 15px; border-radius: 4px; display: none; text-align: center; }
+        .success { background-color: #d4edda; color: #155724; display: block !important; }
+        .error { background-color: #f8d7da; color: #721c24; display: block !important; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Employee Management System</h2>
+    
+    <div id="message"></div>
+
+    <div class="form-group">
+        <input type="text" id="empId" placeholder="Employee ID">
+        <input type="text" id="empName" placeholder="Full Name">
+        <input type="text" id="empDept" placeholder="Department">
+        <input type="number" id="empSalary" placeholder="Salary">
+        <button class="btn-add" onclick="saveEmployee()">Save Employee</button>
+    </div>
+
+    <table id="employeeTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Salary</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            </tbody>
+    </table>
+</div>
+
+<script>
+    // --- MOCK XML DATA ---
+    // In a real scenario, this would be loaded from 'employees.xml' via AJAX.
+    let xmlString = `<?xml version="1.0" encoding="UTF-8"?>
+    <company>
+        <employee>
+            <id>101</id>
+            <name>Alice Johnson</name>
+            <department>HR</department>
+            <salary>55000</salary>
+        </employee>
+        <employee>
+            <id>102</id>
+            <name>Bob Smith</name>
+            <department>IT</department>
+            <salary>75000</salary>
+        </employee>
+    </company>`;
+
+    let xmlDoc;
+    const parser = new DOMParser();
+
+    // Initialize the system
+    window.onload = function() {
+        loadXMLData();
+    };
+
+    function showMessage(text, type) {
+        const msgDiv = document.getElementById('message');
+        msgDiv.innerText = text;
+        msgDiv.className = type;
+        setTimeout(() => msgDiv.className = '', 3000);
+    }
+
+    // --- READ OPERATION ---
+    function loadXMLData() {
+        try {
+            // Simulating AJAX Fetch
+            xmlDoc = parser.parseFromString(xmlString, "text/xml");
+            
+            // Check for parsing errors
+            if (xmlDoc.getElementsByTagName("parsererror").length > 0) {
+                throw new Error("Error parsing XML data.");
+            }
+            
+            renderTable();
+        } catch (error) {
+            showMessage(error.message, "error");
+        }
+    }
+
+    function renderTable() {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = "";
+        
+        const employees = xmlDoc.getElementsByTagName("employee");
+        
+        if (employees.length === 0) {
+            tbody.innerHTML = "<tr><td colspan='5' style='text-align:center'>No records found.</td></tr>";
+            return;
+        }
+
+        for (let i = 0; i < employees.length; i++) {
+            let id = employees[i].getElementsByTagName("id")[0].childNodes[0].nodeValue;
+            let name = employees[i].getElementsByTagName("name")[0].childNodes[0].nodeValue;
+            let dept = employees[i].getElementsByTagName("department")[0].childNodes[0].nodeValue;
+            let sal = employees[i].getElementsByTagName("salary")[0].childNodes[0].nodeValue;
+
+            let row = `<tr>
+                <td>${id}</td>
+                <td>${name}</td>
+                <td>${dept}</td>
+                <td>$${sal}</td>
+                <td>
+                    <button class="btn-edit" onclick="editEmployee('${id}')">Edit</button>
+                    <button class="btn-delete" onclick="deleteEmployee('${id}')">Delete</button>
+                </td>
+            </tr>`;
+            tbody.innerHTML += row;
+        }
+    }
+
+    // --- CREATE / UPDATE OPERATION ---
+    function saveEmployee() {
+        const id = document.getElementById('empId').value;
+        const name = document.getElementById('empName').value;
+        const dept = document.getElementById('empDept').value;
+        const sal = document.getElementById('empSalary').value;
+
+        if (!id || !name || !dept || !sal) {
+            showMessage("Please fill all fields", "error");
+            return;
+        }
+
+        // Check if employee exists (Update mode)
+        let employees = xmlDoc.getElementsByTagName("employee");
+        let existingEmp = null;
+
+        for (let i = 0; i < employees.length; i++) {
+            if (employees[i].getElementsByTagName("id")[0].childNodes[0].nodeValue === id) {
+                existingEmp = employees[i];
+                break;
+            }
+        }
+
+        if (existingEmp) {
+            // Update existing
+            existingEmp.getElementsByTagName("department")[0].textContent = dept;
+            existingEmp.getElementsByTagName("salary")[0].textContent = sal;
+            showMessage("Employee updated successfully!", "success");
+        } else {
+            // Create New Node
+            let newEmp = xmlDoc.createElement("employee");
+            
+            let empId = xmlDoc.createElement("id");
+            empId.appendChild(xmlDoc.createTextNode(id));
+            
+            let empName = xmlDoc.createElement("name");
+            empName.appendChild(xmlDoc.createTextNode(name));
+            
+            let empDept = xmlDoc.createElement("department");
+            empDept.appendChild(xmlDoc.createTextNode(dept));
+            
+            let empSal = xmlDoc.createElement("salary");
+            empSal.appendChild(xmlDoc.createTextNode(sal));
+
+            newEmp.appendChild(empId);
+            newEmp.appendChild(empName);
+            newEmp.appendChild(empDept);
+            newEmp.appendChild(empSal);
+            
+            xmlDoc.documentElement.appendChild(newEmp);
+            showMessage("Employee added successfully!", "success");
+        }
+
+        clearForm();
+        renderTable();
+    }
+
+    // --- DELETE OPERATION ---
+    function deleteEmployee(id) {
+        let employees = xmlDoc.getElementsByTagName("employee");
+        for (let i = 0; i < employees.length; i++) {
+            if (employees[i].getElementsByTagName("id")[0].childNodes[0].nodeValue === id) {
+                xmlDoc.documentElement.removeChild(employees[i]);
+                showMessage("Record deleted.", "success");
+                renderTable();
+                return;
+            }
+        }
+    }
+
+    // Helper: Fill form for editing
+    function editEmployee(id) {
+        let employees = xmlDoc.getElementsByTagName("employee");
+        for (let i = 0; i < employees.length; i++) {
+            if (employees[i].getElementsByTagName("id")[0].childNodes[0].nodeValue === id) {
+                document.getElementById('empId').value = id;
+                document.getElementById('empName').value = employees[i].getElementsByTagName("name")[0].textContent;
+                document.getElementById('empDept').value = employees[i].getElementsByTagName("department")[0].textContent;
+                document.getElementById('empSalary').value = employees[i].getElementsByTagName("salary")[0].textContent;
+                document.getElementById('empId').disabled = true; // ID shouldn't change
+            }
+        }
+    }
+
+    function clearForm() {
+        document.getElementById('empId').value = "";
+        document.getElementById('empName').value = "";
+        document.getElementById('empDept').value = "";
+        document.getElementById('empSalary').value = "";
+        document.getElementById('empId').disabled = false;
+    }
+</script>
+
+</body>
+</html>

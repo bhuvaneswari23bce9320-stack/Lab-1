@@ -1,0 +1,22 @@
+{
+  "students": [
+    {
+      "id": "ST001",
+      "name": "John Doe",
+      "course": "Computer Science",
+      "marks": 85
+    },
+    {
+      "id": "ST002", 
+      "name": "Jane Smith",
+      "course": "Mathematics",
+      "marks": 92
+    },
+    {
+      "id": "ST003",
+      "name": "Mike Johnson",
+      "course": "Physics",
+      "marks": 78
+    }
+  ]
+}
